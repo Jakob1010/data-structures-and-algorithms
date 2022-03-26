@@ -20,13 +20,13 @@ class MyLinkedList:
 
         return current.val
 
-    def addAtHead(self, val: int) -> None:
+    def add_at_head(self, val: int) -> None:
         self.addAtIndex(0, val)
 
-    def addAtTail(self, val: int) -> None:
+    def add_at_tail(self, val: int) -> None:
         self.addAtIndex(self.size, val)
 
-    def addAtIndex(self, index: int, val: int) -> None:
+    def add_at_index(self, index: int, val: int) -> None:
         if index > self.size or index < 0:
             return -1
 
@@ -39,7 +39,7 @@ class MyLinkedList:
         node = ListNode(val, current.next)
         current.next = node
 
-    def deleteAtIndex(self, index: int) -> None:
+    def delete_add_index(self, index: int) -> None:
         if index >= self.size or index < 0:
             return -1
 
