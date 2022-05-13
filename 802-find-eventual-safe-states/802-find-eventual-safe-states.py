@@ -1,37 +1,24 @@
 class Solution:
     def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
-        outgoing = {}
-        incoming = {}
-        top_sort = []
-        terminate_nodes = []
-        
-        for i,edges in enumerate(graph):
-            if len(edges) == 0:
-                terminate_nodes.append(i)
-                top_sort.append(i)
-            else:
-                for edge in edges:
-                    if i in outgoing:
-                        outgoing[i].add(edge)
-                    else:
-                        outgoing[i] = set()
-                        outgoing[i].add(edge)
+        N = len(graph)
+        safe = [False] * N
 
-                    if edge in incoming:
-                        incoming[edge].append(i)
-                    else:
-                        incoming[edge] = [i]
+        graph = [set(neighbors) for neighbors in graph]
+        rgraph = [set() for _ in range(N)]
+        q = collections.deque()
 
-                
-        while top_sort:
-            node = top_sort.pop(0)
-            if node in incoming:
-                for adj_node in incoming[node]:
-                    outgoing[adj_node].remove(node)
-                    if len(outgoing[adj_node]) == 0:
-                        top_sort.append(adj_node)
-                        terminate_nodes.append(adj_node)
-                
-                
-                
-        return sorted(terminate_nodes)
+        for i, js in enumerate(graph):
+            if not js:
+                q.append(i)
+            for j in js:
+                rgraph[j].add(i)
+
+        while q:
+            j = q.popleft()
+            safe[j] = True
+            for i in rgraph[j]:
+                graph[i].remove(j)
+                if len(graph[i]) == 0:
+                    q.append(i)
+
+        return [i for i, is_safe in enumerate(safe) if is_safe]
