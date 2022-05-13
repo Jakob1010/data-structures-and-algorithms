@@ -1,24 +1,13 @@
 class Solution:
-    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
-        N = len(graph)
-        safe = [False] * N
-
-        graph = [set(neighbors) for neighbors in graph]
-        rgraph = [set() for _ in range(N)]
-        q = collections.deque()
-
-        for i, js in enumerate(graph):
-            if not js:
-                q.append(i)
-            for j in js:
-                rgraph[j].add(i)
-
-        while q:
-            j = q.popleft()
-            safe[j] = True
-            for i in rgraph[j]:
-                graph[i].remove(j)
-                if len(graph[i]) == 0:
-                    q.append(i)
-
-        return [i for i, is_safe in enumerate(safe) if is_safe]
+    def eventualSafeNodes(self, graph):
+        def explore(i):
+            visited[i] = 0
+            for v in graph[i]:
+                if visited[v] == 0 or (visited[v] == -1 and explore(v)): return True
+            visited[i] = 1
+            res.append(i)
+            return False
+        visited, res = [-1] * len(graph), []
+        for i in range(len(graph)):
+            if visited[i] == -1: explore(i)
+        return sorted(res)
