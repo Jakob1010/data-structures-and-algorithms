@@ -20,7 +20,8 @@ class Solution:
             reachable = set()
             while q:
                 x,y = q.popleft()
-                reachable.add((x,y))
+                if (x,y) not in reachable:
+                    reachable.add((x,y))
                 if (x,y) not in reachable:
                     reachable.add((x,y))
                 # add all adjacent nodes 
@@ -29,7 +30,8 @@ class Solution:
                     if new_x < 0 or new_y < 0 or new_x >= len(heights) or new_y >= len(heights[0]) or heights[x][y] > heights[new_x][new_y] or (new_x,new_y) in reachable:
                         continue
                     else:
-                        q.append((new_x,new_y))                   
+                        q.append((new_x,new_y))    
+                        reachable.add((new_x,new_y))
             return reachable
                             
         pacific = BFS(pacific)
