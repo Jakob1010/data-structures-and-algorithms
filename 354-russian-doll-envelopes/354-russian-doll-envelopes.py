@@ -11,5 +11,5 @@ class Solution:
                 else:
                     sub[i] = num
             return len(sub)
-            
-        return LIS([i[1] for i in envelopes])
+        
+        return LIS(list(i[1] for i in envelopes))
