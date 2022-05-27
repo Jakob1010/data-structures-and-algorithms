@@ -6,21 +6,18 @@
 #         self.right = right
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        bst = []
+        last = -float('inf')
         
-        def BST_to_list(root,bst):
-            if root is None:
-                return 
+        def BST_to_list(root):
+            nonlocal last
+            if not root:
+                return True
             
-            BST_to_list(root.left,bst)
-            bst.append(root.val)
-            BST_to_list(root.right,bst)
             
-            return root
-            
-        
-        BST_to_list(root,bst)
-        for i in range(1,len(bst)):
-            if bst[i] <= bst[i-1]:
+            if not BST_to_list(root.left) or root.val <= last:
                 return False
-        return True
+            last = root.val
+            return BST_to_list(root.right)
+            
+
+        return BST_to_list(root)
