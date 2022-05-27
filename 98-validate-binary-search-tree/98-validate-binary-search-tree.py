@@ -11,9 +11,7 @@ class Solution:
         def BST_to_list(root):
             nonlocal last
             if not root:
-                return True
-            
-            
+                return True            
             if not BST_to_list(root.left) or root.val <= last:
                 return False
             last = root.val
