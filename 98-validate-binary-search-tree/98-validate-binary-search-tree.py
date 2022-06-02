@@ -6,16 +6,21 @@
 #         self.right = right
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        last = -float('inf')
         
-        def BST_to_list(root):
-            nonlocal last
-            if not root:
-                return True            
-            if not BST_to_list(root.left) or root.val <= last:
-                return False
-            last = root.val
-            return BST_to_list(root.right)
+        isValid = True
+        def validate(root,last):
+            nonlocal isValid
+            if isValid and root:
+                last = validate(root.left,last)
+                if root.val <= last:
+                    isValid = False
+                else:
+                    last = root.val
+                last = validate(root.right,last)
+                
+            return last
+                
             
-
-        return BST_to_list(root)
+            
+        validate(root,-float('inf'))
+        return isValid
