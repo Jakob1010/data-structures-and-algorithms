@@ -1,49 +1,45 @@
 class Solution:
-    def solveNQueens(self, n: int) -> List[List[str]]:
-        rows = set()
-        cols = set()
-        d_1 = set() # (0,0) -> (n-1,n-1)
-        d_2 = set() # (0,n-1) -> (n-1,0)
+    def solveNQueens(self, n):
+        # Making use of a helper function to get the
+        # solutions in the correct output format
+        def create_board(state):
+            board = []
+            for row in state:
+                board.append("".join(row))
+            return board
         
-        temp = [["." for i in range(n)] for j in range(n)] 
-        output = []
-        
-        def backtrack(i,j,q,temp):
-            if q == n:
-                output.append(deepcopy(temp))
-            else:   
-                for k in range(i,n):
-                    for l in range(j,n):
-                        if k in rows:
-                            break
-                        if l in cols or (k-l) in d_1 or (k+l) in d_2:
-                            continue
-                        else:
-                            temp[k][l] = "Q"
-                            rows.add(k)
-                            cols.add(l)
-                            d_1.add(k-l)
-                            d_2.add(k+l)
-                            backtrack(k+1,0,q+1,temp)
-                            temp[k][l] = "."
-                            rows.remove(k)
-                            cols.remove(l)
-                            d_1.remove(k-l)
-                            d_2.remove(k+l)
-                        
-                        
-                    
-        
-        backtrack(0,0,0,temp)
-        output_joined = []
-        for solution in output:
-            sol = []
-            for row in solution:
-                sol.append("".join(row))
-            output_joined.append(sol)
-        return output_joined
-            
-        
-        
-            
-        
+        def backtrack(row, diagonals, anti_diagonals, cols, state):
+            # Base case - N queens have been placed
+            if row == n:
+                ans.append(create_board(state))
+                return
+
+            for col in range(n):
+                curr_diagonal = row - col
+                curr_anti_diagonal = row + col
+                # If the queen is not placeable
+                if (col in cols 
+                      or curr_diagonal in diagonals 
+                      or curr_anti_diagonal in anti_diagonals):
+                    continue
+
+                # "Add" the queen to the board
+                cols.add(col)
+                diagonals.add(curr_diagonal)
+                anti_diagonals.add(curr_anti_diagonal)
+                state[row][col] = "Q"
+
+                # Move on to the next row with the updated board state
+                backtrack(row + 1, diagonals, anti_diagonals, cols, state)
+
+                # "Remove" the queen from the board since we have already
+                # explored all valid paths using the above function call
+                cols.remove(col)
+                diagonals.remove(curr_diagonal)
+                anti_diagonals.remove(curr_anti_diagonal)
+                state[row][col] = "."
+
+        ans = []
+        empty_board = [["."] * n for _ in range(n)]
+        backtrack(0, set(), set(), set(), empty_board)
+        return ans
