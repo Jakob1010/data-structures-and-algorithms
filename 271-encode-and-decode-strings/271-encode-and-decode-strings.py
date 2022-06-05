@@ -1,18 +1,24 @@
 class Codec:
 
     def encode(self, strs):
-        if len(strs) == 0:
-            return unichr(258)
+        """Encodes a list of strings to a single string.
         
-        encoded = unichr(257).join(s for s in strs)
-        return encoded
-        
+        :type strs: List[str]
+        :rtype: str
+        """
+        return unichr(257).join(strs)
+         
 
     def decode(self, s):
-        if s == unichr(258):
-            return []
+        """Decodes a single string to a list of strings.
         
-        decoded = s.split(unichr(257))
-        return decoded
+        :type s: str
+        :rtype: List[str]
+        """
         
-        
+        return s.split(unichr(257))
+            
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(strs))
