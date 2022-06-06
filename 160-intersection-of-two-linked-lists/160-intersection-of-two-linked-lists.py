@@ -6,29 +6,32 @@
 
 class Solution:
     def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
-        mem = set()
-        mem.add(headA)
-        if headB in mem:
-            return headB
-        else:
-            mem.add(headB)
+        n_a = 0
+        n_b = 0
+        a = headA
+        b = headB
         
-        
-        while headA or headB:
-            if headA:
-                headA = headA.next
-                if headA in mem:
-                    return headA
-                else:
-                    mem.add(headA)
+        while a or b:
+            if a:
+                n_a+=1
+                a = a.next
+            if b:
+                n_b += 1
+                b = b.next
                 
-            if headB:
-                headB = headB.next
-                if headB in mem:
-                    return headB
-                else:
-                    mem.add(headB)
-            
-            mem.add(headB)
-            
-        return None
+        a = headA
+        b = headB
+        
+        while a and b:
+            if n_a > n_b:
+                n_a -= 1
+                a = a.next
+            elif n_b > n_a:
+                n_b -= 1
+                b = b.next
+            elif a == b:
+                return a
+            else:
+                a = a.next
+                b = b.next
+        
