@@ -1,26 +1,31 @@
 class TextEditor:
-
     def __init__(self):
-        self.s = ''
-        self.cursor = 0
-
+        self.left = deque()
+        self.right = deque()
+        
     def addText(self, text: str) -> None:
-        self.s = self.s[:self.cursor] + text + self.s[self.cursor:]
-        self.cursor += len(text)
+        self.left.extend(list(text))
 
     def deleteText(self, k: int) -> int:
-        new_cursor = max(0, self.cursor - k)
-        noOfChars = k if self.cursor - k >= 0 else self.cursor
-        self.s = self.s[:new_cursor] + self.s[self.cursor:]
-        self.cursor = new_cursor
-        return noOfChars
-
+        tot = 0
+        while k and self.left:
+            self.left.pop()
+            k -= 1
+            tot +=1
+        return tot
+        
     def cursorLeft(self, k: int) -> str:
-        self.cursor = max(0, self.cursor - k)
-        start = max(0, self.cursor-10)
-        return self.s[start:self.cursor]
+        while k and self.left:
+            self.right.appendleft(self.left.pop())
+            k -= 1
+        return self.getvals()
 
     def cursorRight(self, k: int) -> str:
-        self.cursor = min(len(self.s), self.cursor + k)
-        start = max(0, self.cursor - 10)
-        return self.s[start:self.cursor]
+        while k and self.right:
+            self.left.append(self.right.popleft())
+            k -= 1
+        return self.getvals()
+        
+    def getvals(self):
+        N = len(self.left) 
+        return "".join(self.left[i] for i in range(max(N-10, 0), N))
