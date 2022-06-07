@@ -1,8 +1,5 @@
 class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
-        if not heights or not heights[0]:
-            return []
-        
         pacific = deque()
         atlantic = deque()
         
@@ -16,25 +13,23 @@ class Solution:
             pacific.append((j,0))
             atlantic.append((j,len(heights[0])-1))
             
-        def BFS(q):
-            reachable = set()
-            while q:
-                x,y = q.popleft()
-                if (x,y) not in reachable:
-                    reachable.add((x,y))
-                if (x,y) not in reachable:
-                    reachable.add((x,y))
-                # add all adjacent nodes 
-                # with heigh < current to q
-                for new_x, new_y in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
-                    if new_x < 0 or new_y < 0 or new_x >= len(heights) or new_y >= len(heights[0]) or heights[x][y] > heights[new_x][new_y] or (new_x,new_y) in reachable:
-                        continue
-                    else:
-                        q.append((new_x,new_y))    
-                        reachable.add((new_x,new_y))
-            return reachable
+        
+        def water_flow(ocean):
+            o = set()
+            
+            while ocean:
+                i,j = ocean.popleft()
+                if (i,j) not in o:
+                    o.add((i,j))
+                for k,l in ((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
+                    if k >= 0 and l >= 0 and k < len(heights) and l < len(heights[0]) and heights[k][l] >= heights[i][j] and (k,l) not in o:
+                        ocean.append((k,l))
+                        o.add((k,l))
                             
-        pacific = BFS(pacific)
-        atlantic = BFS(atlantic)
-        pacific_atlantic = pacific.intersection(atlantic)
-        return list(pacific_atlantic)
+            return o
+        
+        pacific = water_flow(pacific)
+        atlantic = water_flow(atlantic)
+        
+        return list(pacific.intersection(atlantic))
+        
